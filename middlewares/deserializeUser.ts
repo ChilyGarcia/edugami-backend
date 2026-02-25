@@ -83,7 +83,8 @@ export async function deserialize_user({request, response, cookies, state}: Cont
     cookies.set("access_token", new_access_token, {
         maxAge: 300000, // 5 minutes
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
+        secure: true,
     })
     
     // @ts-ignore: <>

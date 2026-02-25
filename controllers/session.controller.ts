@@ -87,12 +87,14 @@ export async function create_session_handler({
     cookies.set("access_token", access_token, {
         maxAge: 300000, // 5 minutes
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
+        secure: true,
     });
     cookies.set("refresh_token", refresh_token, {
         maxAge: 60 * 60 * 24 * 365 * 1000, // 1 year
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
+        secure: true,
     });
 
     response.body = session;
