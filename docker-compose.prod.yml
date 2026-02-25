@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: dockerfile
     env_file:
-      - .env.prod
+      - .env
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - MASTER_REGISTER_KEY=${MASTER_REGISTER_KEY}
