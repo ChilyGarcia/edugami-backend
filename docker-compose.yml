@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  edugami-server:
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - MONGODB_URI=mongodb://mongo-edugami:27017/edugami
+      - MASTER_REGISTER_KEY=masterkey
+      - JWT_SECRET=secret
+    ports:
+      - "3005:3005"
+    depends_on:
+      - mongo-edugami
+
+  mongo-edugami:
+    image: mongo:6
+    restart: unless-stopped
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo-edugami-data:/data/db
+
+volumes:
+  mongo-edugami-data:
