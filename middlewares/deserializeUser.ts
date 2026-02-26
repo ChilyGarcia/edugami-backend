@@ -74,18 +74,19 @@ export async function deserialize_user({request, response, cookies, state}: Cont
         }
     }
 
-    const new_access_token = await signJWT({...session, role: user?.role, valid: undefined, institution_id: user?.institution_user_data?.institution_id}, getNumericDate(5))
+    const new_access_token = await signJWT(
+        { ...session, role: user?.role, valid: undefined, institution_id: user?.institution_user_data?.institution_id },
+        getNumericDate(60 * 15),
+    )
     
     // TODO: If is student, check if the institution is still valid
     
+    const accessTokenMaxAgeSeconds = 60 * 15;
 
-    cookies.delete("access_token")
-    cookies.set("access_token", new_access_token, {
-        maxAge: 60 * 15 * 1000, // 15 minutos (coherente con la expiración del JWT)
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-    })
+    response.headers.append(
+        "Set-Cookie",
+        `access_token=${new_access_token}; Path=/; Max-Age=${accessTokenMaxAgeSeconds}; HttpOnly; Secure; SameSite=None`,
+    );
     
     // @ts-ignore: <>
     state['user'] = {...session, role: user.role, id:undefined, valid: undefined, institution_id: user?.institution_user_data?.institution_id}

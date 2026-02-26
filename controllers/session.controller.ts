@@ -77,25 +77,24 @@ export async function create_session_handler({
             role: user.role,
             institution_id: user.institution_user_data?.institution_id ?? "",
         },
-        getNumericDate(60 * 15)
-    ); // 15 minutos (evita que el GET /session justo después del login entre en refresh y provoque 504)
+        getNumericDate(60 * 15),
+    ); // 15 minutos
     const refresh_token = await signJWT(
         { session_id: session.toString() },
         getNumericDate(60 * 60 * 24 * 365)
     );
 
-    cookies.set("access_token", access_token, {
-        maxAge: 60 * 15 * 1000, // 15 minutos (mismo tiempo que la expiración del JWT)
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-    });
-    cookies.set("refresh_token", refresh_token, {
-        maxAge: 60 * 60 * 24 * 365 * 1000, // 1 year
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-    });
+    const accessTokenMaxAgeSeconds = 60 * 15;
+    const refreshTokenMaxAgeSeconds = 60 * 60 * 24 * 365;
+
+    response.headers.append(
+        "Set-Cookie",
+        `access_token=${access_token}; Path=/; Max-Age=${accessTokenMaxAgeSeconds}; HttpOnly; Secure; SameSite=None`,
+    );
+    response.headers.append(
+        "Set-Cookie",
+        `refresh_token=${refresh_token}; Path=/; Max-Age=${refreshTokenMaxAgeSeconds}; HttpOnly; Secure; SameSite=None`,
+    );
 
     response.body = session;
     response.status = 200;
