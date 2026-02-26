@@ -14,14 +14,10 @@ const app = new Application();
 io_consoles;
 init_settings()
 
+// CORS: permitir cualquier origen (refleja el Origin del request)
 app.use(
     oakCors({
-        origin: [
-            "http://localhost:3000",
-            "https://edugami.aliviapp.com.co",
-            "https://pk06pj25-3000.use.devtunnels.ms",
-            "https://edugami.aenstech.com",
-        ],
+        origin: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization", "Origin", "X-Auth-Token"],
         credentials: true,
