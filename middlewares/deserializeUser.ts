@@ -81,7 +81,7 @@ export async function deserialize_user({request, response, cookies, state}: Cont
 
     cookies.delete("access_token")
     cookies.set("access_token", new_access_token, {
-        maxAge: 300000, // 5 minutes
+        maxAge: 60 * 15 * 1000, // 15 minutos (coherente con la expiración del JWT)
         httpOnly: true,
         sameSite: "none",
         secure: true,
